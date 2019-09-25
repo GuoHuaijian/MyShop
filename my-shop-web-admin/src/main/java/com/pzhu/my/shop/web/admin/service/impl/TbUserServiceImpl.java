@@ -98,6 +98,11 @@ public class TbUserServiceImpl implements TbUserService {
         return tbUsers;
     }
 
+    @Override
+    public void deleteMulti(String[] ids) {
+        tbUserDao.deleteMulti(ids);
+    }
+
     /**
      * 用户信息的有效性验证
      *

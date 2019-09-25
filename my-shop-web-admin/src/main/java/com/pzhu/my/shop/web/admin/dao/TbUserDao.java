@@ -95,4 +95,12 @@ public interface TbUserDao {
      */
     List<TbUser> search(TbUser tbUser);
 
+    /**
+     * 批量删除
+     *
+     * @param ids
+     * @Return: void
+     * @Date: 2019/9/26 0:01
+     */
+    void deleteMulti(String[] ids);
 }

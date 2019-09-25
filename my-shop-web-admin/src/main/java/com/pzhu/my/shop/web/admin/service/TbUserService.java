@@ -23,6 +23,7 @@ public interface TbUserService {
 
     /**
      * 查询用户表全部信息
+     *
      * @param
      * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
      * @Date: 2019/9/23 18:52
@@ -76,18 +77,29 @@ public interface TbUserService {
 
     /**
      * 登陆逻辑
+     *
      * @param email
      * @param password
      * @Return: com.pzhu.my.shop.domain.TbUser
      * @Date: 2019/9/23 21:24
      */
-    TbUser login(String email,String password);
+    TbUser login(String email, String password);
 
     /**
      * 根据关键字模糊查询用户
+     *
      * @param tbUser
      * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
      * @Date: 2019/9/24 21:01
      */
     List<TbUser> search(TbUser tbUser);
+
+    /**
+     * 批量删除
+     *
+     * @param ids
+     * @Return: void
+     * @Date: 2019/9/26 0:02
+     */
+    void deleteMulti(String[] ids);
 }
