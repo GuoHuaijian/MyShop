@@ -13,6 +13,7 @@ import com.pzhu.my.shop.domain.TbUser;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Guo Huaijian
@@ -69,15 +70,6 @@ public interface TbUserDao {
     void update(TbUser tbUser);
 
     /**
-     * 根据名字模糊查询
-     *
-     * @param username
-     * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
-     * @Date: 2019/9/23 21:09
-     */
-    List<TbUser> selectByName(String username);
-
-    /**
      * 根据邮箱查询用户
      *
      * @param email
@@ -87,15 +79,6 @@ public interface TbUserDao {
     TbUser getByEmail(String email);
 
     /**
-     * 根据邮箱，电话或者姓名模糊查询
-     *
-     * @param tbUser
-     * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
-     * @Date: 2019/9/24 20:59
-     */
-    List<TbUser> search(TbUser tbUser);
-
-    /**
      * 批量删除
      *
      * @param ids
@@ -103,4 +86,22 @@ public interface TbUserDao {
      * @Date: 2019/9/26 0:01
      */
     void deleteMulti(String[] ids);
+
+    /**
+     * 分页查询
+     *
+     * @param params
+     * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
+     * @Date: 2019/9/29 11:14
+     */
+    List<TbUser> page(Map<String, Object> params);
+
+    /**
+     * 查询总数
+     *
+     * @param tbUser
+     * @Return: int
+     * @Date: 2019/9/29 14:42
+     */
+    int count(TbUser tbUser);
 }

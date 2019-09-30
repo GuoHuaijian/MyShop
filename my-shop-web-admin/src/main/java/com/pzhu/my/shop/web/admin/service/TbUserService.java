@@ -10,6 +10,7 @@
 package com.pzhu.my.shop.web.admin.service;
 
 import com.pzhu.my.shop.commons.dto.BaseResult;
+import com.pzhu.my.shop.commons.dto.PageInfo;
 import com.pzhu.my.shop.domain.TbUser;
 
 import java.util.List;
@@ -67,15 +68,6 @@ public interface TbUserService {
     void update(TbUser tbUser);
 
     /**
-     * 根据名字模糊查询
-     *
-     * @param username
-     * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
-     * @Date: 2019/9/23 21:09
-     */
-    List<TbUser> selectByName(String username);
-
-    /**
      * 登陆逻辑
      *
      * @param email
@@ -86,15 +78,6 @@ public interface TbUserService {
     TbUser login(String email, String password);
 
     /**
-     * 根据关键字模糊查询用户
-     *
-     * @param tbUser
-     * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
-     * @Date: 2019/9/24 21:01
-     */
-    List<TbUser> search(TbUser tbUser);
-
-    /**
      * 批量删除
      *
      * @param ids
@@ -102,4 +85,24 @@ public interface TbUserService {
      * @Date: 2019/9/26 0:02
      */
     void deleteMulti(String[] ids);
+
+    /**
+     * 分页查询
+     *
+     * @param start
+     * @param length
+     * @param draw
+     * @Return: java.util.List<com.pzhu.my.shop.domain.TbUser>
+     * @Date: 2019/9/29 11:17
+     */
+    PageInfo<TbUser> page(int start, int length, int draw,TbUser tbUser);
+
+    /**
+     * 查询总数
+     *
+     * @param tbUser
+     * @Return: int
+     * @Date: 2019/9/29 14:42
+     */
+    int count(TbUser tbUser);
 }
