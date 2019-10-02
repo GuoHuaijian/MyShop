@@ -62,12 +62,12 @@ public class TbContentServiceImpl implements TbContentService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         tbContentDao.delete(id);
     }
 
     @Override
-    public TbContent getById(long id) {
+    public TbContent getById(Long id) {
         return tbContentDao.getById(id);
     }
 
@@ -102,6 +102,11 @@ public class TbContentServiceImpl implements TbContentService {
     @Override
     public int count(TbContent tbContent) {
         return tbContentDao.count(tbContent);
+    }
+
+    @Override
+    public void deleteByCategoryId(String[] categoryIds) {
+        tbContentDao.deleteByCategoryId(categoryIds);
     }
 
 //    /**

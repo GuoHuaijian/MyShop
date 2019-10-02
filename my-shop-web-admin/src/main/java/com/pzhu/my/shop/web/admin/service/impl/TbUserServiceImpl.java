@@ -66,12 +66,12 @@ public class TbUserServiceImpl implements TbUserService {
 
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         tbUserDao.delete(id);
     }
 
     @Override
-    public TbUser getById(long id) {
+    public TbUser getById(Long id) {
         return tbUserDao.getById(id);
     }
 

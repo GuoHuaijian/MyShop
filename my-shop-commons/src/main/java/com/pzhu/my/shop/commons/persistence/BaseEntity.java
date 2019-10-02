@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * @author: Guo Huaijian
  * @Date: 2019/9/29 15:18
- * @description:
+ * @description:实体类的基类
  */
 public class BaseEntity implements Serializable {
     private Long id;
