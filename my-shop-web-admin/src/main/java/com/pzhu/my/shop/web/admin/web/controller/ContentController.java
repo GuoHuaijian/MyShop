@@ -10,11 +10,10 @@
 package com.pzhu.my.shop.web.admin.web.controller;
 
 import com.pzhu.my.shop.commons.dto.BaseResult;
-import com.pzhu.my.shop.commons.dto.PageInfo;
 import com.pzhu.my.shop.domain.TbContent;
+import com.pzhu.my.shop.web.admin.abstracts.AbstractBaseController;
 import com.pzhu.my.shop.web.admin.service.TbContentService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author: Guo Huaijian
  * @Date: 2019/9/29 23:26
@@ -32,35 +29,28 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("content")
-public class ContentController {
+public class ContentController extends AbstractBaseController<TbContent, TbContentService> {
 
-    @Autowired
-    private TbContentService tbContentService;
-
-    /**
-     * 填充表单
-     *
-     * @param id
-     * @Return: com.pzhu.my.shop.domain.TbUser
-     * @Date: 2019/9/24 15:29
-     */
     @ModelAttribute
-    public TbContent getContent(Long id) {
+    public TbContent getTbContent(Long id) {
         TbContent tbContent = null;
+
+        // id 不为空，则从数据库获取
         if (id != null) {
-            tbContent = tbContentService.getById(id);
+            tbContent = service.getById(id);
         } else {
             tbContent = new TbContent();
         }
+
         return tbContent;
     }
 
     /**
-     * 跳转列表页
+     * 跳转内容列表页
      *
-     * @Return: java.lang.String
-     * @Date: 2019/9/24 12:44
+     * @return
      */
+    @Override
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list() {
         return "content_list";
@@ -69,90 +59,68 @@ public class ContentController {
     /**
      * 跳转表单页
      *
-     * @param
-     * @Return: java.lang.String
-     * @Date: 2019/9/24 12:45
+     * @return
      */
+    @Override
     @RequestMapping(value = "form", method = RequestMethod.GET)
     public String form() {
         return "content_form";
     }
 
     /**
-     * 保存信息
+     * 保存
      *
-     * @param tbContent
+     * @param entity
      * @param model
      * @param redirectAttributes
-     * @Return: java.lang.String
-     * @Date: 2019/9/24 22:36
+     * @return
      */
+    @Override
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public String save(TbContent tbContent, Model model, RedirectAttributes redirectAttributes) {
-        BaseResult baseResult = tbContentService.save(tbContent);
-        //保存成功
-        if (baseResult.getStatus() == BaseResult.STATUS_SUCCESS) {
-            //重定向携带信息
+    public String save(TbContent entity, Model model, RedirectAttributes redirectAttributes) {
+        BaseResult baseResult = service.save(entity);
+
+        // 保存成功
+        if (baseResult.getStatus() == 200) {
             redirectAttributes.addFlashAttribute("baseResult", baseResult);
             return "redirect:/content/list";
-            //保存失败
-        } else {
+        }
+
+        // 保存失败
+        else {
             model.addAttribute("baseResult", baseResult);
             return "content_form";
         }
     }
 
     /**
-     * 删除信息
+     * 删除
      *
      * @param ids
-     * @Return: com.pzhu.my.shop.commons.dto.BaseResult
-     * @Date: 2019/9/25 22:46
+     * @return
      */
+    @Override
     @ResponseBody
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public BaseResult delete(String ids) {
         BaseResult baseResult = null;
         if (StringUtils.isNotBlank(ids)) {
             String[] idArray = ids.split(",");
-            tbContentService.deleteMulti(idArray);
+            service.deleteMulti(idArray);
             baseResult = BaseResult.success("删除内容成功");
         } else {
             baseResult = BaseResult.fail("删除内容失败");
         }
+
         return baseResult;
     }
 
     /**
-     * 分页查询
+     * 跳转详情页
      *
-     * @param
-     * @Return: com.pzhu.my.shop.commons.dto.BaseResult
-     * @Date: 2019/9/29 14:34
+     * @return
      */
-    @ResponseBody
-    @RequestMapping(value = "page", method = RequestMethod.GET)
-    public PageInfo<TbContent> page(HttpServletRequest request, TbContent tbContent) {
-
-        String strDraw = request.getParameter("draw");
-        String strStart = request.getParameter("start");
-        String strLength = request.getParameter("length");
-
-        int draw = strDraw == null ? 0 : Integer.parseInt(strDraw);
-        int start = strStart == null ? 0 : Integer.parseInt(strStart);
-        int length = strLength == null ? 0 : Integer.parseInt(strLength);
-
-        PageInfo<TbContent> pageInfo = tbContentService.page(start, length, draw, tbContent);
-        System.out.println("测试" + pageInfo);
-        return pageInfo;
-    }
-
-    /**
-     * 显示详情
-     *
-     * @Return: java.lang.String
-     * @Date: 2019/9/29 17:49
-     */
+    @Override
     @RequestMapping(value = "detail", method = RequestMethod.GET)
     public String detail() {
         return "content_detail";

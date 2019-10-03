@@ -9,11 +9,9 @@
  */
 package com.pzhu.my.shop.web.admin.dao;
 
-import com.pzhu.my.shop.commons.persistence.BaseDao;
+import com.pzhu.my.shop.commons.persistence.BaseTreeDao;
 import com.pzhu.my.shop.domain.TbContentCategory;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * @author: Guo Huaijian
@@ -21,13 +19,6 @@ import java.util.List;
  * @description:
  */
 @Repository
-public interface TbContentCategoryDao extends BaseDao<TbContentCategory> {
-    /**
-     * 根据父级节点ID查询所有子节点
-     *
-     * @param
-     * @Return: java.util.List<com.pzhu.my.shop.domain.TbContentCategory>
-     * @Date: 2019/9/30 11:09
-     */
-    List<TbContentCategory> selectByPid(Long Pid);
+public interface TbContentCategoryDao extends BaseTreeDao<TbContentCategory> {
+
 }

@@ -13,6 +13,8 @@ import com.pzhu.my.shop.commons.persistence.BaseEntity;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author: Guo Huaijian
  * @Date: 2019/9/29 22:46
@@ -20,7 +22,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Data
 public class TbContent extends BaseEntity {
-    private String categoryId;
+
     @Length(min = 1, max = 20, message = "标题长度介于 1 - 20 个字符之间")
     private String title;
     @Length(min = 1, max = 20, message = "子标题长度介于 1 - 20 个字符之间")
@@ -32,4 +34,6 @@ public class TbContent extends BaseEntity {
     private String pic2;
     @Length(min = 1, message = "内容不能为空")
     private String content;
+    @NotNull(message = "父级类目不能为空")
+    private TbContentCategory tbContentCategory;
 }

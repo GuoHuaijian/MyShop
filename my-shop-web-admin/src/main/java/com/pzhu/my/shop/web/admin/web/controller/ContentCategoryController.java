@@ -9,14 +9,18 @@
  */
 package com.pzhu.my.shop.web.admin.web.controller;
 
+import com.pzhu.my.shop.commons.dto.BaseResult;
 import com.pzhu.my.shop.domain.TbContentCategory;
+import com.pzhu.my.shop.web.admin.abstracts.AbstractBaseTreeController;
 import com.pzhu.my.shop.web.admin.service.TbContentCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,60 +32,99 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("content/category")
-public class ContentCategoryController {
+public class ContentCategoryController extends AbstractBaseTreeController<TbContentCategory, TbContentCategoryService> {
 
-    @Autowired
-    private TbContentCategoryService tbContentCategoryService;
+    @ModelAttribute
+    public TbContentCategory getTbContentCategory(Long id) {
+        TbContentCategory tbContentCategory = null;
 
+        // id 不为空，则从数据库获取
+        if (id != null) {
+            tbContentCategory = service.getById(id);
+        } else {
+            tbContentCategory = new TbContentCategory();
+        }
+
+        return tbContentCategory;
+    }
+
+    @Override
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list(Model model) {
         List<TbContentCategory> targetList = new ArrayList<>();
-        List<TbContentCategory> sourceList = tbContentCategoryService.selectAll();
+        List<TbContentCategory> sourceList = service.selectAll();
 
         // 排序
         sortList(sourceList, targetList, 0L);
+
         model.addAttribute("tbContentCategories", targetList);
         return "content_category_list";
     }
 
     /**
+     * 跳转表单页
+     *
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "form", method = RequestMethod.GET)
+    public String form(TbContentCategory tbContentCategory) {
+        return "content_category_form";
+    }
+
+    /**
+     * 保存
+     *
+     * @param tbContentCategory
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "save", method = RequestMethod.POST)
+    public String save(TbContentCategory tbContentCategory, Model model, RedirectAttributes redirectAttributes) {
+        BaseResult baseResult = service.save(tbContentCategory);
+
+        if (baseResult.getStatus() == 200) {
+            redirectAttributes.addFlashAttribute("baseResult", baseResult);
+            return "redirect:/content/category/list";
+        } else {
+            model.addAttribute("baseResult", baseResult);
+            return form(tbContentCategory);
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param ids
+     * @return
+     */
+    @Override
+    @ResponseBody
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public BaseResult delete(String ids) {
+        BaseResult baseResult = null;
+        if (StringUtils.isNotBlank(ids)) {
+            service.delete(Long.parseLong(ids));
+            baseResult = BaseResult.success("删除分类及其子类及其全部内容成功");
+        } else {
+            baseResult = BaseResult.fail("删除分类失败");
+        }
+
+        return baseResult;
+    }
+
+    /**
      * 树形结构
      *
-     * @param
-     * @Return: java.util.List<com.pzhu.my.shop.domain.TbContentCategory>
-     * @Date: 2019/9/30 11:15
+     * @return
      */
+    @Override
     @ResponseBody
     @RequestMapping(value = "tree/data", method = RequestMethod.POST)
     public List<TbContentCategory> treeData(Long id) {
         if (id == null) {
             id = 0L;
         }
-        return tbContentCategoryService.selectByPid(id);
-    }
-
-    /**
-     * 排序
-     *
-     * @param sourceList 数据源集合
-     * @param targetList 排序后的集合
-     * @param parentId   父节点的 ID
-     */
-    private void sortList(List<TbContentCategory> sourceList, List<TbContentCategory> targetList, Long parentId) {
-        for (TbContentCategory tbContentCategory : sourceList) {
-            if (tbContentCategory.getParentId().equals(parentId)) {
-                targetList.add(tbContentCategory);
-
-                // 判断有没有子节点，如果有则继续追加
-                if (tbContentCategory.getIsParent()) {
-                    for (TbContentCategory contentCategory : sourceList) {
-                        if (contentCategory.getParentId().equals(tbContentCategory.getId())) {
-                            sortList(sourceList, targetList, tbContentCategory.getId());
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        return service.selectByPid(id);
     }
 }

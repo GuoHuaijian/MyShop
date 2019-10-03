@@ -3,7 +3,6 @@
 <mapper namespace="com.pzhu.my.shop.web.admin.dao.TbContentDao">
     <sql id="tbContentColumns">
         a.id,
-        category_id AS categoryId,
         a.title,
         a.sub_title AS subTitle,
         a.title_desc AS titleDesc,
@@ -12,13 +11,21 @@
         a.pic2,
         a.content,
         a.created,
-        a.updated
+        a.updated,
+        b.id AS "tbContentCategory.id",
+        b.name AS "tbContentCategory.name"
     </sql>
+
+    <sql id="tbContentJoins">
+        LEFT JOIN tb_content_category AS b ON a.category_id = b.id
+    </sql>
+
     <select id="getById" resultType="TbContent">
         SELECT
         <include refid="tbContentColumns"/>
         FROM
         tb_content AS a
+        <include refid="tbContentJoins"/>
         WHERE
         a.id = #{id}
     </select>
@@ -28,6 +35,7 @@
         <include refid="tbContentColumns"/>
         FROM
         tb_content AS a
+        <include refid="tbContentJoins"/>
     </select>
 
     <select id="page" resultType="TbContent" parameterType="java.util.Map">
@@ -35,15 +43,16 @@
         <include refid="tbContentColumns"/>
         FROM
         tb_content AS a
+        <include refid="tbContentJoins"/>
         <where>
-            <if test="tbContent.title != null and tbContent.title != ''">
-                AND a.title LIKE CONCAT ('%', #{tbContent.title}, '%')
+            <if test="pageParams.title != null and pageParams.title != ''">
+                AND a.title LIKE CONCAT ('%', #{pageParams.title}, '%')
             </if>
-            <if test="tbContent.subTitle != null and tbContent.subTitle != ''">
-                AND a.sub_title LIKE CONCAT ('%', #{tbContent.subTitle}, '%')
+            <if test="pageParams.subTitle != null and pageParams.subTitle != ''">
+                AND a.sub_title LIKE CONCAT ('%', #{pageParams.subTitle}, '%')
             </if>
-            <if test="tbContent.titleDesc != null and tbContent.titleDesc != ''">
-                AND a.title_desc LIKE CONCAT ('%', #{tbContent.titleDesc}, '%')
+            <if test="pageParams.titleDesc != null and pageParams.titleDesc != ''">
+                AND a.title_desc LIKE CONCAT ('%', #{pageParams.titleDesc}, '%')
             </if>
         </where>
         LIMIT #{start}, #{length}
@@ -79,7 +88,7 @@
         )
         VALUES
           (
-            #{categoryId},
+            #{tbContentCategory.id},
             #{title},
             #{subTitle},
             #{titleDesc},
