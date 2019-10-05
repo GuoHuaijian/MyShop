@@ -22,30 +22,30 @@ public class BaseResult implements Serializable {
 
     private int status;
     private String message;
+    private Object data;
 
     public static BaseResult success() {
-        BaseResult baseResult = BaseResult.creatBaseResult(STATUS_SUCCESS, "成功");
-        return baseResult;
+        return BaseResult.createResult(STATUS_SUCCESS, "成功", null);
     }
 
     public static BaseResult success(String message) {
-        BaseResult baseResult = BaseResult.creatBaseResult(STATUS_SUCCESS, message);
-        return baseResult;
+        return BaseResult.createResult(STATUS_SUCCESS, message, null);
+    }
+
+    public static BaseResult success(String message, Object data) {
+        return BaseResult.createResult(STATUS_SUCCESS, message, data);
     }
 
     public static BaseResult fail() {
-        BaseResult baseResult = BaseResult.creatBaseResult(STATUS_FAIL, "失败");
-        return baseResult;
+        return BaseResult.createResult(STATUS_FAIL, "失败", null);
     }
 
     public static BaseResult fail(String message) {
-        BaseResult baseResult = BaseResult.creatBaseResult(STATUS_FAIL, message);
-        return baseResult;
+        return BaseResult.createResult(STATUS_FAIL, message, null);
     }
 
-    public static BaseResult fail(int status,String message) {
-        BaseResult baseResult = BaseResult.creatBaseResult(status,message);
-        return baseResult;
+    public static BaseResult fail(int status, String message) {
+        return BaseResult.createResult(status, message, null);
     }
 
     public int getStatus() {
@@ -64,10 +64,19 @@ public class BaseResult implements Serializable {
         this.message = message;
     }
 
-    public static BaseResult creatBaseResult(int status, String message) {
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    private static BaseResult createResult(int status, String message, Object data) {
         BaseResult baseResult = new BaseResult();
         baseResult.setStatus(status);
         baseResult.setMessage(message);
+        baseResult.setData(data);
         return baseResult;
     }
 }
