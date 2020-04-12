@@ -1,5 +1,5 @@
 # MyShop
-![IDE](https://img.shields.io/badge/IDE-IntelliJ%20IDEA-brightgreen.svg) ![Java](https://img.shields.io/badge/Java-1.8-blue.svg)![Database](https://img.shields.io/badge/Database-MySQL-lightgrey.svg)
+![IDE](https://img.shields.io/badge/IDE-IntelliJ%20IDEA-brightgreen.svg) ![Java](https://img.shields.io/badge/Java-1.8-blue.svg) ![Database](https://img.shields.io/badge/Database-MySQL-lightgrey.svg)
 - 商城💼
 - 拦截器🔒
 - Spring框架🎨
